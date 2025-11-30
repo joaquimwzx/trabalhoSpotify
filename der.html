@@ -1,0 +1,35 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DER — SpotLearn</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="container"><a class="back-btn" href="index.html">⬅ Voltar</a>
+  <div class="section">
+    <h3>Diagrama Entidade-Relacionamento (DER) — Detalhado</h3>
+    <p class="pre">Abaixo estão as tabelas principais, seus campos e explicação de uso no sistema.</p>
+
+    <h4>Tabelas essenciais</h4>
+    <ul>
+      <li><strong>Usuário</strong> (id_usuario PK, país, data_criacao, plano)</li>
+      <li><strong>Música</strong> (id_musica PK, título, id_artista FK, id_album FK, duração, release_date, audio_features JSON)</li>
+      <li><strong>Artista</strong> (id_artista PK, nome, gêneros)</li>
+      <li><strong>Álbum</strong> (id_album PK, título, capa_url)</li>
+      <li><strong>Histórico de Reprodução</strong> (id_evento PK, id_usuario FK, id_musica FK, ação, tempo_escutado, timestamp)</li>
+      <li><strong>Perfil Musical (TasteProfile)</strong> (id_usuario PK FK, vetor_embedding, last_update)</li>
+      <li><strong>Playlist</strong> (id_playlist PK, id_usuario FK, tipo, data_criacao)</li>
+      <li><strong>PlaylistTrack</strong> (id_linha PK, id_playlist FK, id_musica FK, posicao, score)</li>
+      <li><strong>RecommendationRun</strong> (id_exec PK, id_usuario FK, data_geracao, model_version, candidatos)</li>
+      <li><strong>FeedbackScore</strong> (id_feedback PK, id_usuario FK, id_musica FK, tipo, intensidade)</li>
+    </ul>
+
+    <h4>Relacionamentos chave</h4>
+    <p>Usuário 1:N Histórico de Reprodução — afeta diretamente o TasteProfile.</p>
+    <p>Música N:M Playlist — via PlaylistTrack, com atributos posição e score, permitindo auditoria.</p>
+    <p>RecommendationRun registra versão do modelo e lista de candidatos — crucial para reprodutibilidade.</p>
+
+    <h4>Exemplos de consultas importantes</h4>
+    <pre class="pre">-- Buscar eventos recentes do usuário
+SELECT * FROM PlayEvent WHERE id_usuario = ? ORDER BY timestamp DESC LIMIT 100;
+
+-- Atualizar TasteProfile com novo embedding
+UPDATE TasteProfile SET vetor_embedding = ?, last_update = NOW() WHERE id_usuario = ?;</pre>
+
+    <h4>Nota sobre auditoria e explicabilidade</h4>
+    <p>Manter RecommendationRun e PlaylistTrack com campo de score permite explicar por que uma faixa foi incluída (explicabilidade).</p>
+  </div></div></body></html>

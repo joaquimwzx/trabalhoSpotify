@@ -1,0 +1,45 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fluxograma — SpotLearn</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="container"><a class="back-btn" href="index.html">⬅ Voltar</a>
+  <div class="section">
+    <h3>Fluxograma Lógico — Pipeline detalhado</h3>
+    <p class="pre">Explicação completa do fluxo que transforma sinais do usuário em uma playlist personalizada.</p>
+
+    <h4>1) Coleta de sinais</h4>
+    <p>O sistema registra todos os eventos relevantes: plays, pausas, skips (com tempo), saves, compartilhamentos, buscas e adições a playlists. Cada evento tem timestamp e contexto (dispositivo, país).</p>
+
+    <h4>2) Normalização e agregação</h4>
+    <p>Eventos são agregados em janelas temporais (últimos 7, 30 e 90 dias) para capturar tendências recentes e hábitos de longo prazo. Ex.: play_count_7d, skip_rate_30d.</p>
+
+    <h4>3) Construção do Perfil Musical (TasteProfile)</h4>
+    <p>Com modelos de embedding, o sistema transforma histórico em um vetor de preferências que representa afinidade por gêneros, timbre, ritmo e emoções.</p>
+
+    <h4>4) Seleção de candidatos</h4>
+    <p>Usando collaborative filtering (usuários semelhantes) e content-based (semelhança de áudio/metadata), gera-se um conjunto amplo de candidatos (ex.: 5k faixas).</p>
+
+    <h4>5) Filtragem</h4>
+    <p>Remoção de faixas bloqueadas, direitos autorais inválidos, exclusões do usuário e conteúdo não disponível por país. Também aplica regras editoriais (limitar repetição de artista).</p>
+
+    <h4>6) Enriquecimento e curadoria</h4>
+    <p>Curadores humanos podem adicionar regras (promover faixas locais, priorizar novos lançamentos), e features externas (tendências regionais) são incorporadas.</p>
+
+    <h4>7) Ranqueamento</h4>
+    <p>Modelos de rank (learning-to-rank) combinam sinais: similaridade, probabilidade de play, novelty score, diversity penalty e penalidade por skip.</p>
+
+    <h4>8) Geração e entrega</h4>
+    <p>Playlist final (ex.: 30 faixas) é gerada e entregue. Cada execução é registrada para análise posterior (RecommendationRun).</p>
+
+    <h4>Regras condicionais importantes</h4>
+    <ul>
+      <li>Se skip_rate &gt; 0.7 para uma faixa em 30 dias → penalizar fortemente</li>
+      <li>Se usuário salvou ou adicionou à playlist → boost de score</li>
+      <li>Limitar máximo de X faixas do mesmo artista por playlist</li>
+      <li>Priorizar diversidade temporal (misturar eras diferentes)</li>
+    </ul>
+
+    <h4>Exemplo resumido (pseudocódigo)</h4>
+    <pre class="pre">candidatos = buscar_candidatos(taste_profile, 5000)
+candidatos = aplicar_filtros(candidatos, exclusoes, direitos)
+scores = calcular_scores(candidatos, taste_profile, signals)
+playlist = selecionar_top_k(scores, k=30)</pre>
+
+  </div></div></body></html>

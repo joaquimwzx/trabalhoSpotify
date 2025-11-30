@@ -1,0 +1,28 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Raio-X — SpotLearn</title><link rel="stylesheet" href="style.css"></head><body>
+<div class="container"><a class="back-btn" href="index.html">⬅ Voltar</a>
+  <div class="section">
+    <h3>Raio‑X da Interface — Mapeamento e Anotações</h3>
+    <p class="pre">Explicação detalhada de onde cada informação vem do banco e como os eventos do UI impactam os modelos.</p>
+
+    <h4>Componentes principais</h4>
+    <ul>
+      <li><strong>Card da playlist</strong>: mostra cover (Album.capa_url), título (Playlist.name), e resumo de métricas (quantas faixas novas)</li>
+      <li><strong>Lista de faixas</strong>: cada linha usa Track.title, Artist.name, duração e indicadores de novidade</li>
+      <li><strong>Botões de ação</strong>: Curtir/Salvar → cria FeedbackScore e PlayEvent(action=save)</li>
+      <li><strong>Indicador de novidade</strong>: calculado com base em familiarity score (quanto o usuário já ouviu o artista)</li>
+    </ul>
+
+    <h4>Fluxo UI → BD (exemplo)</h4>
+    <ol>
+      <li>Usuário clica em 'Curtir' → POST /feedback → cria FeedbackScore (tipo=like)</li>
+      <li>Serviço processa e atualiza TasteProfile assíncrono</li>
+      <li>Na próxima RecommendationRun, faixa com like tem boost no rank_score</li>
+    </ol>
+
+    <h4>Sugestões de aprimoramento</h4>
+    <ul>
+      <li>Adicionar painel 'Por que esta faixa?' com campos de RecommendationRun explicando features que originaram a escolha</li>
+      <li>Controle de 'novidade' por slider no perfil do usuário (ajusta peso de novelty no rank)</li>
+      <li>Modo 'Segurança' que remove conteúdo explícito do ranking</li>
+    </ul>
+  </div></div></body></html>
